@@ -1,0 +1,18 @@
+<div class="widget widget_facebook wow">
+<h3 class="widget_header">Follow us</h3>
+
+{% if settings.fb_likebox_toggle and settings.fb_likebox_toggle != '' and settings.fb_likebox_url and settings.fb_likebox_url != '' %}
+<div class="fb_wrapper">
+<div
+class="fb-like-box"
+data-href="{{ settings.fb_likebox_url }}"
+data-width="290"
+data-height="235px"
+data-colorscheme="light"
+data-show-faces="true"
+data-header="false"
+data-stream="false"
+data-show-border="false"></div>
+</div>
+{% endif %}
+</div>

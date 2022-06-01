@@ -1,0 +1,322 @@
+<!doctype html>
+<!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if IE 7]><html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!--[if IE 9 ]><html class="ie9 no-js"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--> <html class="no-js"> <!--<![endif]-->  
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    {% if page_description %}
+    <meta name="description" content="{{ page_description }}" />
+    {% endif %}
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+    {% if template == 'index' %}
+    <title>{{ shop.name }} | {{ page_title }}</title>
+    {% elsif template == '404' %}
+    <title>Page Not Found | {{ shop.name }}</title>
+    {% else %}
+    <title>{{ page_title }} | {{ shop.name }}</title>
+    {% endif %}
+
+    <link rel="canonical" href="{{ canonical_url }}" />
+  	<link href="{{ 'favicon.ico' | asset_url }}" rel="shortcut icon" type="image/x-icon" />
+    {{ content_for_header }}
+
+	{{ settings.base_font_custom_code }}
+    {{ settings.heading_font_custom_code }}
+  	<link href='//fonts.googleapis.com/css?family=Lobster' rel='stylesheet' type='text/css'>
+
+    <!--[if lt IE 9]>
+    {{ '//html5shiv.googlecode.com/svn/trunk/html5.js' | script_tag }}
+    {{ 'ie8.css' | asset_url | stylesheet_tag }}
+    <![endif]-->
+
+    <!--[if IE 9]>
+    {{ 'ie9.css' | asset_url | stylesheet_tag }}
+    <![endif]-->
+
+    {% if template contains 'customers' %}
+    <script src="{{ 'shopify_common.js' | shopify_asset_url }}" type="text/javascript"></script>
+    <script src="{{ 'customer_area.js'  | shopify_asset_url }}" type="text/javascript"></script>
+    {% endif %}
+
+    {{ 'bootstrap.css' | asset_url | stylesheet_tag }} 
+    {{ 'assets.css' | asset_url | stylesheet_tag }} 
+    {{ 'style.css' | asset_url | stylesheet_tag }}
+    {{ 'responsive.css' | asset_url | stylesheet_tag }}
+    {{ 'font-awesome.css' | asset_url | stylesheet_tag }}
+    {{ '//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js' | script_tag }}
+    {{ 'jquery-migrate-1.2.1.min.js'  | asset_url | script_tag }}
+    {{ 'api.jquery.js' | asset_url | script_tag }}
+
+	{% include 'snippet-page-preloader' %}
+
+    {{ 'option_selection.js' | shopify_asset_url | script_tag }}
+	{{ 'device.min.js' | asset_url | script_tag }}
+    {% comment %}{{ 'bootstrap.min.js'  | asset_url | script_tag }}{% endcomment %}
+    {{ 'jquery.easing.1.3.js'  | asset_url | script_tag }}
+    {{ 'ajaxify-shop.js' | asset_url | script_tag }}
+    {{ 'hoverIntent.js' | asset_url | script_tag }}
+    {{ 'superfish.js' | asset_url | script_tag }}
+    {{ 'sftouchscreen.js' | asset_url | script_tag }}
+  	{{ 'tm-stick-up.js' | asset_url | script_tag }}
+  	{{ 'jquery.formstyler.min.js' | asset_url | script_tag }}
+	{{ 'wow.min.js' | asset_url | script_tag }}
+  	{% case template %}
+  		{% when 'index' %}
+  			{{ 'jquery.bxslider.min.js' | asset_url | script_tag }}
+  		{% when 'product' %}
+  			{{ 'jquery.elevatezoom.js' | asset_url | script_tag }}
+  			{{ 'jquery.bxslider.min.js' | asset_url | script_tag }}
+  			{{ 'jquery.fancybox-1.3.4.js' | asset_url | script_tag }}
+  	{% endcase %}
+
+</head>
+<body {% if template == 'index' and settings.homepage_map_toggle and settings.homepage_map_toggle != '' %}onload="initialize()" {% elsif template == 'page.contact' and settings.contacts_map_toggle and settings.contacts_map_toggle != '' %}onload="initialize()"{% endif %} id="{{ page_title | handle }}" class="{% if customer %}customer-logged-in {% endif %}template-{{ template | replace: '.', ' ' | truncatewords: 1, '' | handle }}">
+
+{% if settings.fb_likebox_toggle and settings.fb_likebox_toggle != '' and settings.fb_likebox_url and settings.fb_likebox_url != '' %}
+<div id="fb-root"></div>
+<script>
+(function($) {
+    if(device.desktop()){
+		window.fbAsyncInit = function() {
+			FB.init({
+				appId   : '734741803247761',
+				xfbml   : true,
+				version : 'v2.2'
+			});
+		};
+
+		(function(d, s, id){
+			var js, fjs = d.getElementsByTagName(s)[0];
+			if (d.getElementById(id)) {return;}
+			js = d.createElement(s); js.id = id;
+			js.src = "//connect.facebook.net/en_US/sdk.js";
+			fjs.parentNode.insertBefore(js, fjs);
+		}(document, 'script', 'facebook-jssdk'));
+    };
+})(jQuery);
+</script>
+{% endif %}
+
+<div class="page_preloader"></div>
+
+{% comment %}Shopify does not support Internet Explorer 6.{% endcomment %}
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+<![endif]-->
+
+{% if settings.cookies_policy_toggle and settings.cookies_policy_toggle != '' %}
+  	<!-- COOKIES POLICY NOTIFICATION -->
+    {% include 'widget-cookies' %}
+{% endif %}
+
+<div id="wrapper">
+<div id="wrapper2">
+
+<!-- HEADER -->
+<header id="header">
+<div class="container">
+	<div class="header_top">
+	    {% if shop.customer_accounts_enabled %}
+	    <!-- USER MENU -->
+	    <ul class="header_user">
+		    {% if customer %}
+		    <li class="icon_user"><a href="/account">{{ customer.first_name | truncate:15 }}</a></li>
+		    <li class="icon_lock">{{ 'Log out' | customer_logout_link }}</li>
+		    {% else %}
+		        <li class="icon_lock">{{ 'Log in' | customer_login_link }}</li>
+		        {% if shop.customer_accounts_optional %}
+		        <li class="icon_user">{{ 'Create an account' | customer_register_link }}</li>
+		        {% endif %}
+		    {% endif %}
+	    </ul>
+	    {% endif %}
+
+	    <!-- CURRENCIES -->
+	    {% if settings.show_multiple_currencies %}
+	    {% include 'widget-currencies-switcher' %}
+	    {% endif %}
+	</div>
+
+    <!-- LOGO -->
+    <div id="logo">
+	    <a href="/">{% if settings.use_logo and settings.use_logo != '' %}{{ 'logo.png' | asset_url | img_tag: shop.name }}{% else %}<b>{{ shop.name }}</b>{% endif %}</a>
+    </div>
+
+	<div class="clearfix"></div>
+
+	<div class="header_bottom">
+	    <!-- HEADER CART -->
+	    <a class="header_cart" href="/cart"><i class="fa fa-shopping-cart"></i><span class="cart-total-items"><span class="count">{{ cart.item_count }}</span></span><span>item(s)</span></a>
+
+		<a class="header_checkout" href="/cart">Check out</a>
+	</div>
+
+	<div class="clearfix"></div>
+
+    <!-- MEGAMENU -->
+    {% include 'widget-megamenu' %}
+</div>
+</header>
+
+{% if template == 'index' %}
+<div class="container">
+    <!-- SHOWCASE CUSTOM BLOCKS -->
+    {% include 'widget-showcase' %}
+</div>
+{% endif %}
+
+<!-- MAIN CONTENT -->
+<div id="main" role="main">
+<div class="container">
+
+{% if template != 'index' and settings.enable_breadcrumbs == 'true' %}
+{% include 'snippet-breadcrumbs' %}
+{% endif %}
+
+{% case template %}
+    {% when 'page.noasides' %}
+        {% assign width_sidebars = false %}
+    {% else %}
+        {% assign width_sidebars = true %}
+{% endcase %}
+
+{% if template contains 'customers' %}
+	{% assign width_sidebars = false %}
+{% endif %}
+
+    <div class="row {% if settings.enable_left_sidebar == true and settings.enable_right_sidebar == true %}sidebar_both{% elsif settings.enable_left_sidebar == true and settings.enable_right_sidebar == false %}sidebar_left{% elsif settings.enable_left_sidebar == false and settings.enable_right_sidebar == true %}sidebar_right{% else %}sidebar_none{% endif %} {% if template contains 'customers' %}sidebar_off{% endif %}">
+
+    <div class="column_center">
+    <div id="main_content" class="col-sm-{% if settings.enable_left_sidebar == true and settings.enable_right_sidebar == true and width_sidebars == true %}6{% elsif settings.enable_left_sidebar == true and settings.enable_right_sidebar == false and width_sidebars == true %}9{% elsif settings.enable_left_sidebar == false and settings.enable_right_sidebar == true and width_sidebars == true %}9{% else %}12{% endif %}">
+        {% if template == 'index' and settings.welcome_block_toggle and settings.welcome_block_toggle != '' %}
+            <!-- HOMEPAGE WELCOME BLOCK -->
+            <div class="welcome_block">
+                <h1>{{ settings.welcome_block_text1 }}</h1>
+                <p>{{ settings.welcome_block_text2 }}</p>
+            </div>
+        {% endif %}
+
+        {% if template == 'list-collections' %}
+            {% include 'collection-listing' %}
+        {% else %}
+            {{ content_for_layout }}
+        {% endif %}
+
+        {% if template == 'index' %}
+            <!-- CUSTOM BOTTOM BLOCKS -->
+            <div id="bottom">
+            <div class="row">
+                {% for i in (1..3) %}
+                    {% capture link %}custom_bottom{{ i }}_link{% endcapture %}
+                    {% capture img_toggle %}custom_bottom{{ i }}_img_toggle{% endcapture %}
+                    {% capture img_file %}custom_bottom{{ i }}_img.png{% endcapture %}
+                    {% capture text1 %}custom_bottom{{ i }}_text1{% endcapture %}
+                    {% capture text2 %}custom_bottom{{ i }}_text2{% endcapture %}
+                    {% capture text3 %}custom_bottom{{ i }}_text3{% endcapture %}
+
+                    {% if settings[link] != '' or settings[text1] != '' or settings[text2] != '' %}
+                        <div class="wow col-xs-4 custom_bottom custom_bottom__{{ i }}">
+                            {% if settings[img_toggle] and settings[img_toggle] != '' %}<img src="{{ img_file | asset_url }}" alt="{{ settings[text1] }} {{ settings[text2] }}" />{% endif %}
+                            <div class="custom_bottom_content">
+                                <h3><a href="{{ settings[link] }}">{{ settings[text1] }}</a></h3>
+                                <p>{{ settings[text2] }}</p>
+                                <a href="{{ settings[link] }}">{{ settings[text3] }}</a>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            </div>
+        {% endif %}
+    </div>
+    </div>
+
+    {% if settings.enable_left_sidebar and width_sidebars == true %}
+    <div class="column_left column col-sm-3">
+    {% include 'widget-collections' %}
+    {% include 'widget-types' %}
+    {% include 'widget-facebook' %}
+    </div>
+    {% endif %}
+
+    {% if settings.enable_right_sidebar and width_sidebars == true %}
+    <div class="column_right column col-sm-3">
+    {% include 'widget-collections' %}
+    {% include 'widget-types' %}
+    {% include 'widget-facebook' %}
+    </div>
+    {% endif %}
+
+	</div>
+
+</div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+<div class="container">
+	<div class="row">
+		<div class="{% if template contains 'customers' %}col-sm-12{% else %}col-sm-9 col-sm-offset-3{% endif %}">
+            <div class="copyright">
+                <p role="contentinfo">&copy; {{ "now" | date: "%Y" }} {{ shop.name }}. All Rights Reserved. {% if settings.show_copyright %}Design by <a href="//templatemonster.com">TemplateMonster.com</a>.{% endif %} {{ powered_by_link }}.</p><!-- Design by templatemonster.com -->
+            </div>
+		</div>
+	</div>
+</div>
+</footer>
+
+</div><!-- / #wrapper2 -->
+</div><!-- / #wrapper -->
+
+<div class="cart_popup">Product Added to Cart</div>
+
+<div id="scroll_top"><i class="fa fa-chevron-up"></i></div>
+
+<!-- currencies selector -->
+{% include 'snippet-currencies' %}
+
+<!-- olark chat -->
+{% if settings.olark_chat_toggle and settings.olark_chat_toggle != '' %}
+	{{ settings.olark_chat_code }}
+{% endif %}
+
+{{ 'shop.js'  | asset_url | script_tag }}
+
+{{ 'jquery.parallax.js' | asset_url | script_tag }}
+
+<script type="text/javascript">
+(function($) {
+    if(device.desktop()){
+        // PARALLAX INIT
+        $(window).load(function() {
+            $('header').parallax("50%", -0.4);
+        });
+
+        // SMOOTHSCROLL 4 WEBKIT
+        var platform = navigator.platform.toLowerCase();
+        if (platform.indexOf('win') == 0 || platform.indexOf('linux') == 0) {
+            if ($.browser.webkit || $.browser.msie) {
+
+                /* jquery.simplr.smoothscroll - https://github.com/simov/simplr-smoothscroll */
+                ;(function(e){"use strict";e.srSmoothscroll=function(t){var n=e.extend({step:85,speed:600,ease:"linear"},t||{});var r=e(window),i=e(document),s=0,o=n.step,u=n.speed,a=r.height(),f=navigator.userAgent.indexOf("AppleWebKit")!==-1?e("body"):e("html"),l=false;e("body").mousewheel(function(e,t){l=true;if(t<0)s=s+a>=i.height()?s:s+=o;else s=s<=0?0:s-=o;f.stop().animate({scrollTop:s},u,n.ease,function(){l=false});return false});r.on("resize",function(e){a=r.height()}).on("scroll",function(e){if(!l)s=r.scrollTop()})}})(jQuery);
+
+                /* jquery.mousewheel - https://github.com/jquery/jquery-mousewheel */
+                !function(a){"function"==typeof define&&define.amd?define(["jquery"],a):"object"==typeof exports?module.exports=a:a(jQuery)}(function(a){function b(b){var g=b||window.event,h=i.call(arguments,1),j=0,l=0,m=0,n=0,o=0,p=0;if(b=a.event.fix(g),b.type="mousewheel","detail"in g&&(m=-1*g.detail),"wheelDelta"in g&&(m=g.wheelDelta),"wheelDeltaY"in g&&(m=g.wheelDeltaY),"wheelDeltaX"in g&&(l=-1*g.wheelDeltaX),"axis"in g&&g.axis===g.HORIZONTAL_AXIS&&(l=-1*m,m=0),j=0===m?l:m,"deltaY"in g&&(m=-1*g.deltaY,j=m),"deltaX"in g&&(l=g.deltaX,0===m&&(j=-1*l)),0!==m||0!==l){if(1===g.deltaMode){var q=a.data(this,"mousewheel-line-height");j*=q,m*=q,l*=q}else if(2===g.deltaMode){var r=a.data(this,"mousewheel-page-height");j*=r,m*=r,l*=r}if(n=Math.max(Math.abs(m),Math.abs(l)),(!f||f>n)&&(f=n,d(g,n)&&(f/=40)),d(g,n)&&(j/=40,l/=40,m/=40),j=Math[j>=1?"floor":"ceil"](j/f),l=Math[l>=1?"floor":"ceil"](l/f),m=Math[m>=1?"floor":"ceil"](m/f),k.settings.normalizeOffset&&this.getBoundingClientRect){var s=this.getBoundingClientRect();o=b.clientX-s.left,p=b.clientY-s.top}return b.deltaX=l,b.deltaY=m,b.deltaFactor=f,b.offsetX=o,b.offsetY=p,b.deltaMode=0,h.unshift(b,j,l,m),e&&clearTimeout(e),e=setTimeout(c,200),(a.event.dispatch||a.event.handle).apply(this,h)}}function c(){f=null}function d(a,b){return k.settings.adjustOldDeltas&&"mousewheel"===a.type&&b%120===0}var e,f,g=["wheel","mousewheel","DOMMouseScroll","MozMousePixelScroll"],h="onwheel"in document||document.documentMode>=9?["wheel"]:["mousewheel","DomMouseScroll","MozMousePixelScroll"],i=Array.prototype.slice;if(a.event.fixHooks)for(var j=g.length;j;)a.event.fixHooks[g[--j]]=a.event.mouseHooks;var k=a.event.special.mousewheel={version:"3.1.12",setup:function(){if(this.addEventListener)for(var c=h.length;c;)this.addEventListener(h[--c],b,!1);else this.onmousewheel=b;a.data(this,"mousewheel-line-height",k.getLineHeight(this)),a.data(this,"mousewheel-page-height",k.getPageHeight(this))},teardown:function(){if(this.removeEventListener)for(var c=h.length;c;)this.removeEventListener(h[--c],b,!1);else this.onmousewheel=null;a.removeData(this,"mousewheel-line-height"),a.removeData(this,"mousewheel-page-height")},getLineHeight:function(b){var c=a(b),d=c["offsetParent"in a.fn?"offsetParent":"parent"]();return d.length||(d=a("body")),parseInt(d.css("fontSize"),10)||parseInt(c.css("fontSize"),10)||16},getPageHeight:function(b){return a(b).height()},settings:{adjustOldDeltas:!0,normalizeOffset:!0}};a.fn.extend({mousewheel:function(a){return a?this.bind("mousewheel",a):this.trigger("mousewheel")},unmousewheel:function(a){return this.unbind("mousewheel",a)}})});
+
+                $.srSmoothscroll({
+                    step: 100,
+                    speed: 600,
+                    ease: 'linear'
+                });
+            }
+        };
+    };
+})(jQuery);
+</script>
+
+</body>
+</html>

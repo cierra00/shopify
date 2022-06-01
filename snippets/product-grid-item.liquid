@@ -1,0 +1,79 @@
+{% if template != 'index' %}
+    {% if settings.collection_listing_cols == '2' %}
+    {% cycle 'step2' : '<div class="row">', '' %}
+    {% elsif settings.collection_listing_cols == '3' %}
+    {% cycle 'step3' : '<div class="row">', '', '' %}
+    {% elsif settings.collection_listing_cols == '4' %}
+    {% cycle 'step4' : '<div class="row">', '', '', '' %}
+    {% endif %}
+{% endif %}
+
+{% comment %}Is this product on sale?{% endcomment %}
+{% assign on_sale = false %}
+{% if product.compare_at_price > product.price %}
+  {% assign on_sale = true %}
+{% endif %}
+
+{% comment %}Is this product new?{% endcomment %}
+{% assign date_pub_y = product.published_at | date:'%Y' %}
+{% assign date_pub_d = product.published_at | date:'%j' %}
+{% assign date_now_y = 'now' | date:'%Y' %}
+{% assign date_now_d = 'now' | date:'%j' %}
+{% assign dates_diff_y = date_now_y | minus: date_pub_y | times: 365 %}
+{% assign dates_diff_d = date_now_d | minus: date_pub_d %}
+{% assign dates_diff = dates_diff_y | plus: dates_diff_d %}
+{% assign new_products_period = settings.new_products_period | plus: 0 %}
+
+{% if template == 'index' %}
+	{% cycle 'step_home1' : '<div class="col-sm-3">', '' %}
+{% else %}
+	{% if settings.collection_listing_cols == '2' %}<div class="col-sm-6">
+		{% elsif settings.collection_listing_cols == '3' %}<div class="col-sm-4">
+		{% elsif settings.collection_listing_cols == '4' %}<div class="col-sm-3">
+	{% endif %}
+{% endif %} 
+<div class="wow product">
+    <div class="product_img">
+        <a class="img_change" href="{{ product.url | within: collection }}">
+            <img src="{{ product.featured_image.src | product_img_url: image_size }}" alt="{{ product.featured_image.alt | escape }}" />
+            <img class="img__2" src="{% for image in product.images limit:1 offset:1 %}{{ image.src | product_img_url: image_size }}{% endfor %}" alt="{% for image in product.images limit:1 offset:1 %}{{ image.alt | escape }}{% endfor %}" />
+            {% if product.compare_at_price and product.compare_at_price > product.price %}<span class="product_badge sale">SALE</span>{% endif %}
+            {% if dates_diff <= new_products_period %}<span class="product_badge new">NEW</span>{% endif %}
+        </a>
+    </div>
+
+    <div class="product_info">
+        <div class="product_price">
+            {% if product.price_varies %}From{% endif %}
+            <span class="money">{{ product.price | money }}</span>
+            {% if on_sale %}
+            <span class="money compare-at-price">{{ product.compare_at_price | money }}</span>
+            {% endif %}
+        </div>
+
+        <div class="product_name">
+            <a href="{{ product.url | within: collection }}">{{ product.title | truncate:30 }}</a>
+        </div>
+
+        {% if template != 'index' %}<div class="product_desc">{{ product.description | strip_html | truncate: 70 }}</div>{% endif %} 
+
+		{% include "snippet-add-to-cart" %}
+    </div>
+</div>
+{% if template == 'index' and forloop.last == false %}
+	{% cycle 'step_home2' : '', '</div>' %}
+{% else %}
+	</div>
+{% endif %}
+
+{% if template != 'index' %}
+    {% if settings.collection_listing_cols == '2' and forloop.last == false %}
+    {% cycle 'step22' : '', '</div>' %}
+    {% elsif settings.collection_listing_cols == '3' and forloop.last == false %}
+    {% cycle 'step33' : '', '', '</div>' %}
+    {% elsif settings.collection_listing_cols == '4' and forloop.last == false %}
+    {% cycle 'step44' : '', '', '', '</div>' %}
+    {% endif %}
+{% endif %}
+
+{% if template != 'index' and forloop.last %}</div>{% endif %}

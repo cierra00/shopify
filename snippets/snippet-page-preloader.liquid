@@ -1,0 +1,14 @@
+<script type="text/javascript">
+function preloadImages() {
+    for(var i = 0; i<arguments.length; i++)
+    $("<img />").attr("src", arguments[i]);
+}
+
+preloadImages("{{ 'bx_loader.gif' | asset_url }}");
+
+(function($) {
+    $(document).ready(function(){
+        $('.page_preloader').delay(600).fadeOut('fast');
+    });
+})(jQuery);
+</script>
